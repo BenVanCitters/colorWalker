@@ -1,11 +1,73 @@
 class ColorStroke
 {
-  ArrayList<float[]> points;
+  ArrayList<float[]> pathPoints;
+  ArrayList<float[]> triangleStripPoints;
+  int segmentCount = 100;
+  
+  public ColorStroke()
+  {
+    pathPoints = new ArrayList<float[]>();
+    triangleStripPoints = new ArrayList<float[]>();
+  } 
+  
+  void constructLine(PGraphics g, PImage img, int[] startingPoint)
+  {
+    g.beginDraw();
+    int currentIndex = getIndexFromPos(startingPoint,g);
+
+    float maxDelta = .1;
+    float deltaDelta = .02;
+    img.loadPixels();
+   
+    int currentXY[] = {0,0};
+    
+    for(int i = 0; i < segmentCount; i++)
+    {
+      float strokeW = .6+random(10);
+  
+      int currentColor = img.pixels[currentIndex];
+  
+      
+      float brtness = .99*brightness(currentColor)/255.f;
+      
+      angleDelta += (random(deltaDelta*2)-deltaDelta)*(1-brtness);
+      angleDelta = max(-maxDelta,min(maxDelta,angleDelta));
+      angle += angleDelta;
+      
+      //get random distance
+      
+      float distance = random(40);// *(1-brtness);
+       
+      currentXY= getPosFromIndex(currentIndex,g);
+      
+      float newXY[] = {(currentXY[0]+distance*cos(angle)),
+                     (currentXY[1]+distance*sin(angle))};
+     
+      //constrain index to positions on the image               
+      newXY[0] = max(0,min(newXY[0],img.width));
+      newXY[1] = max(0,min(newXY[1],img.height));  
+      pathPoints.add(newXY);
+      
+      //do cross product to add width to the line
+      PVector p = new PVector(cos(angle),sin(angle),0);
+      p = p.cross(new PVector(0,0,1));
+      p.mult(strokeW);
+      
+      triangleStripPoints.add(new float[]{newXY[0]+p.x,newXY[1]+p.y});
+      triangleStripPoints.add(new float[]{newXY[0]-p.x,newXY[1]-p.y});
+
+      currentIndex = getIndexFromPos(newXY,g);
+    }
+    //close off the line?
+    triangleStripPoints.add(new float[]{currentXY[0],currentXY[1]});
+    triangleStripPoints.add(new float[]{currentXY[0],currentXY[1]});
+    g.endDraw();
+  }
   
   void draw(PGraphics g, PImage img, int[] startingPoint)
   {
     g.beginDraw();
-    int currentIndex = getIndexFromPos(startingPoint,g);//(int)( (mouseX*g.width/width) + (mouseY*g.height/height)*g.width);
+    int currentIndex = getIndexFromPos(startingPoint,g);
     g.noFill();
     g.stroke(0);
 
@@ -14,7 +76,7 @@ class ColorStroke
     img.loadPixels();
     g.beginShape(TRIANGLE_STRIP);
 
-    int iterations = 800;
+    int iterations = segmentCount;
     int currentXY[] = {0,0};
     g.noStroke();
     for(int i = 0; i < iterations; i++)
