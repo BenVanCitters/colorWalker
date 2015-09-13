@@ -1,23 +1,19 @@
 PImage img;
 int currentIndex = 0;
 
-float angle;
-float angleDelta;
+float angle = random(TWO_PI);
+float angleDelta = 0.1;
 
 PGraphics render;
 void setup()
 {
   img = loadImage("027_27.JPG");
-     img.loadPixels();
-     int wth = 1500;
-  size(wth,wth*984/1484,P3D);
+  img.loadPixels();
+  int wth = 1500;
+  size(1000,1000,P3D);
   
-    angle = random(TWO_PI);
-   angleDelta = 0.1;
    
-
-   render = createGraphics(img.width,img.height,P3D);
-
+  render = createGraphics(img.width,img.height,P3D);
   resetCanvas();
 }
 
@@ -77,7 +73,7 @@ void doLineFill2()
     
     float distance = random(40);// *(1-brtness);
      
-    currentXY= new int[]{currentIndex%img.width,currentIndex/img.width};
+    currentXY= getPosFromIndex(currentIndex);//new int[]{currentIndex%img.width,currentIndex/img.width};
     
     int newXY[] = {(int)(currentXY[0]+distance*cos(angle)),
                    (int)(currentXY[1]+distance*sin(angle))};
@@ -93,8 +89,8 @@ void doLineFill2()
     render.vertex(newXY[0]+p.x,newXY[1]+p.y,rndZ);
     render.vertex(newXY[0]-p.x,newXY[1]-p.y,rndZ);
     
-    currentIndex = newXY[0] + newXY[1]*img.width;
-    currentIndex = max(0,min(currentIndex,img.pixels.length-1));
+    currentIndex = getIndexFromPos(newXY);//newXY[0] + newXY[1]*img.width;
+//    currentIndex = max(0,min(currentIndex,img.pixels.length-1));
   }
   render.vertex(currentXY[0],currentXY[1],0);
     render.vertex(currentXY[0],currentXY[1],0);
@@ -107,6 +103,9 @@ int getIndexFromPos(int[] pos)
   if(render.pixels == null)
     return -1;
   int result = 0;
+  //out of bounds positions break our calculation so we have to enforce that they are in the box!
+  pos[0] = max(0,min(render.width-1, pos[0]));
+  pos[1] = max(0,min(render.height-1, pos[1]));
   result = pos[0] + pos[1]*render.width;
   result = max(0,min(result,render.pixels.length-1));
   return result;
