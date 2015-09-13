@@ -4,14 +4,19 @@ class StrokeCollection
   PGraphics drawBuffer;
   private ArrayList<ColorStroke> strokes;
   
-  public StrokeCollection()
+  public StrokeCollection(PImage img)
   {
-    
+    strokes = new ArrayList<ColorStroke>();
+    scrImage = img;
+    drawBuffer = createGraphics(img.width,img.height,P3D);
   }
   
   void clearStrokesAndBuffer()
   {
-    
+    strokes.clear();
+    drawBuffer.beginDraw();
+    drawBuffer.clear();
+    drawBuffer.endDraw();
   }
   
   void addStroke(int x, int y)
@@ -27,5 +32,7 @@ class StrokeCollection
     {
       cs.draw(drawBuffer);
     }
+//    image(scrImage,0,0);
   }
+  
 }

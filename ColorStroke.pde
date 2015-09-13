@@ -21,9 +21,7 @@ class ColorStroke
     float deltaDelta = .02;
     img.loadPixels();
 
-    int currentXY[] = {
-      0, 0
-    };
+    int currentXY[] = {0, 0};
 
     for (int i = 0; i < segmentCount; i++)
     {
@@ -44,10 +42,8 @@ class ColorStroke
 
       currentXY= getPosFromIndex(currentIndex, g);
 
-      float newXY[] = {
-        (currentXY[0]+distance*cos(angle)), 
-        (currentXY[1]+distance*sin(angle))
-      };
+      float newXY[] = {(currentXY[0]+distance*cos(angle)), 
+                       (currentXY[1]+distance*sin(angle))};
 
       //constrain index to positions on the image               
       newXY[0] = max(0, min(newXY[0], img.width));
@@ -59,32 +55,21 @@ class ColorStroke
       p = p.cross(new PVector(0, 0, 1));
       p.mult(strokeW);
 
-      triangleStripPoints.add(new float[] {
-        newXY[0]+p.x, newXY[1]+p.y, 0
-      }
-      );
-      triangleStripPoints.add(new float[] {
-        newXY[0]-p.x, newXY[1]-p.y, 0
-      }
-      );
+      triangleStripPoints.add(new float[] {newXY[0]+p.x, newXY[1]+p.y, 0});
+      triangleStripPoints.add(new float[] {newXY[0]-p.x, newXY[1]-p.y, 0});
 
       currentIndex = getIndexFromPos(newXY, g);
     }
     //close off the line?
-    triangleStripPoints.add(new float[] {
-      currentXY[0], currentXY[1], 0
-    }
-    );
-    triangleStripPoints.add(new float[] {
-      currentXY[0], currentXY[1], 0
-    }
-    );
+    triangleStripPoints.add(new float[] {currentXY[0], currentXY[1], 0});
+    triangleStripPoints.add(new float[] {currentXY[0], currentXY[1], 0});
     g.endDraw();
   }
 
   void draw(PGraphics g)
   {
     g.beginDraw();
+//    g.ellipse(100,100,100,100);
     g.beginShape(TRIANGLE_STRIP);
 
     g.noStroke();
@@ -122,9 +107,7 @@ class ColorStroke
 
   int[] getPosFromIndex(int index, PGraphics g)
   {
-    int result[] = new int[] {
-      index%g.width, index/g.width
-    };
+    int result[] = new int[] { index%g.width, index/g.width };
     result[0] = max(0, min(result[0], g.width));
     result[1] = max(0, min(result[1], g.height));  
     return result;

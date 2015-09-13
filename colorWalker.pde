@@ -5,6 +5,9 @@ float angle = random(TWO_PI);
 float angleDelta = 0.1;
 
 PGraphics render;
+
+StrokeCollection collection;
+
 void setup()
 {
   img = loadImage("027_27.JPG");
@@ -12,15 +15,14 @@ void setup()
   int wth = 1500;
   size(1000,1000,P3D);
   
-   
   render = createGraphics(img.width,img.height,P3D);
+  collection = new StrokeCollection(img);
   resetCanvas();
 }
 
 void draw()
 {
-  image(render,0,0,width,height);
-  
+  image(collection.drawBuffer,0,0,width,height);
 }
 
 
@@ -30,11 +32,14 @@ void resetCanvas()
   render.clear();
   render.endDraw();
   background(255);
+  collection.clearStrokesAndBuffer();
 }
 
 void mouseReleased()
 {
-  doLineFill2();
+  collection.addStroke((mouseX*render.width/width), (mouseY*render.height/height));
+  collection.drawStrokes();
+//  doLineFill2();
   println("clicked" + millis());
 }
 
@@ -122,7 +127,8 @@ int[] getPosFromIndex(int index)
 void keyPressed() {
   if (key == 's' ) {
     String className = this.getClass().getSimpleName();
-    render.save("renders/" + className+"-"+year()+"-"+month()+"-"+day()+":"+hour()+":"+minute()+":"+second()+":"+millis() +".png");    
+//    render.save("renders/" + className+"-"+year()+"-"+month()+"-"+day()+":"+hour()+":"+minute()+":"+second()+":"+millis() +".png");    
+    collection.drawBuffer.save("renders/" + className+"-"+year()+"-"+month()+"-"+day()+":"+hour()+":"+minute()+":"+second()+":"+millis() +".png");
   }
   
   if(key == 'c'){
