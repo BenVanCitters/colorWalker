@@ -1,15 +1,20 @@
 class ColorStroke
 {
+  
+  float angle = random(TWO_PI);
+  float angleDelta = 0.1;
+  
   ArrayList<float[]> pathPoints;
   ArrayList<float[]> triangleStripPoints;
-  ArrayList<Integer> colors;
-  int segmentCount = 100;
+  ArrayList<SegmentDrawAttributes> pathAttributes;
+  int segmentCount = 1000;
+
 
   public ColorStroke()
   {
     pathPoints = new ArrayList<float[]>();
     triangleStripPoints = new ArrayList<float[]>();
-    colors = new ArrayList<Integer>();
+    pathAttributes = new ArrayList<SegmentDrawAttributes>();
   } 
 
   void constructLine(PGraphics g, PImage img, float[] startingPoint)
@@ -25,25 +30,26 @@ class ColorStroke
 
     for (int i = 0; i < segmentCount; i++)
     {
-      float strokeW = .6+random(10);
+      //set some per-segment attributes
+      SegmentDrawAttributes attributes = new SegmentDrawAttributes();
+      attributes.strokeColor = img.pixels[currentIndex];
+      attributes.segStrokeWeight = (.6+random(50));
+      pathAttributes.add(attributes);
 
-      int currentColor = img.pixels[currentIndex];
-      colors.add(currentColor);
-
-      float brtness = .99*brightness(currentColor)/255.f;
+      float brtness = .99*brightness(attributes.strokeColor)/255.f;
 
       angleDelta += (random(deltaDelta*2)-deltaDelta)*(1-brtness);
       angleDelta = max(-maxDelta, min(maxDelta, angleDelta));
       angle += angleDelta;
 
-      //get random distance
-
-      float distance = random(40);// *(1-brtness);
+      //get a semi-random distance
+      float distance = random(40);
 
       currentXY= getPosFromIndex(currentIndex, g);
 
       float newXY[] = {(currentXY[0]+distance*cos(angle)), 
-                       (currentXY[1]+distance*sin(angle))};
+                       (currentXY[1]+distance*sin(angle)),
+                       0};
 
       //constrain index to positions on the image               
       newXY[0] = max(0, min(newXY[0], img.width));
@@ -60,22 +66,19 @@ class ColorStroke
 
       currentIndex = getIndexFromPos(newXY, g);
     }
-    //close off the line?
-    triangleStripPoints.add(new float[] {currentXY[0], currentXY[1], 0});
-    triangleStripPoints.add(new float[] {currentXY[0], currentXY[1], 0});
     g.endDraw();
   }
 
+  // draw a smooth line
   void draw(PGraphics g)
   {
     g.beginDraw();
-//    g.ellipse(100,100,100,100);
     g.beginShape(TRIANGLE_STRIP);
 
     g.noStroke();
-    for (int i = 0; i < colors.size(); i++)
+    for (int i = 0; i < segmentCount; i++)
     {
-      int currentColor = colors.get(i);
+      int currentColor = pathAttributes.get(i).strokeColor;
       g.fill(currentColor);
 
       float currentPoint[] = triangleStripPoints.get(i*2);
@@ -83,12 +86,29 @@ class ColorStroke
       currentPoint = triangleStripPoints.get(i*2+1);
       g.vertex(currentPoint[0], currentPoint[1], currentPoint[2]);
     }
-    float currentPoint[] = triangleStripPoints.get(colors.size()*2);
-    g.vertex(currentPoint[0], currentPoint[1], currentPoint[2]);
-    currentPoint = triangleStripPoints.get(colors.size()*2+1);
-    g.vertex(currentPoint[0], currentPoint[1], currentPoint[2]);
 
     g.endShape();
+    g.endDraw();
+  }
+
+  //draw with boxes
+  void draw2(PGraphics g)
+  {
+    g.beginDraw();
+    g.noFill();
+  
+    for(int i = 0; i < segmentCount-1; i++)
+    {
+      SegmentDrawAttributes attributes = pathAttributes.get(i);
+      g.strokeWeight(attributes.segStrokeWeight);
+      int currentColor = attributes.strokeColor;
+      g.stroke(currentColor);
+      
+      float currentPoint[] = pathPoints.get(i);
+      float nextPoint[] = pathPoints.get(i+1);
+  
+      g.line(currentPoint[0], currentPoint[1],nextPoint[0],nextPoint[1]);
+    }
     g.endDraw();
   }
 

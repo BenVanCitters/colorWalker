@@ -19,10 +19,10 @@ class StrokeCollection
     drawBuffer.endDraw();
   }
   
-  void addStroke(int x, int y)
+  void addStroke(float[] pos)
   {
     ColorStroke cs = new ColorStroke();
-    cs.constructLine(drawBuffer, scrImage, new float[] {x,y});
+    cs.constructLine(drawBuffer, scrImage, pos);
     strokes.add(cs);
   }
   
@@ -32,7 +32,6 @@ class StrokeCollection
     {
       cs.draw(drawBuffer);
     }
-//    image(scrImage,0,0);
   }
   
 }
