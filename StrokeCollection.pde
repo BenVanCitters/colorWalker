@@ -14,9 +14,7 @@ class StrokeCollection
   void clearStrokesAndBuffer()
   {
     strokes.clear();
-    drawBuffer.beginDraw();
-    drawBuffer.clear();
-    drawBuffer.endDraw();
+    
   }
   
   void addStroke(float[] pos)
@@ -28,6 +26,10 @@ class StrokeCollection
   
   void drawStrokes()
   {
+    drawBuffer.beginDraw();
+    drawBuffer.clear();
+    drawBuffer.endDraw();
+    
     for(ColorStroke cs : strokes)
     {
       cs.draw(drawBuffer);

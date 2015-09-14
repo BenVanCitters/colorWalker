@@ -15,9 +15,7 @@ void setup()
 
 void draw()
 {
-  
   image(collection.drawBuffer,0,0,width,height);
-  
 }
 
 void resetCanvas()
@@ -31,6 +29,8 @@ void mouseReleased()
   float transformedMouse[] = {(mouseX*collection.drawBuffer.width/width),  
                               (mouseY*collection.drawBuffer.height/height)};
   long start = millis();
+  
+  //add a stroke and re-render the scene
   collection.addStroke(transformedMouse);
   collection.drawStrokes();
   println("draw time: " + (millis()-start));

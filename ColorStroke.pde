@@ -33,7 +33,7 @@ class ColorStroke
       //set some per-segment attributes
       SegmentDrawAttributes attributes = new SegmentDrawAttributes();
       attributes.strokeColor = img.pixels[currentIndex];
-      attributes.segStrokeWeight = (.6+random(50));
+      attributes.segStrokeWeight = .6+random(10);;
       pathAttributes.add(attributes);
 
       float brtness = .99*brightness(attributes.strokeColor)/255.f;
@@ -59,7 +59,7 @@ class ColorStroke
       //do cross product to add width to the line
       PVector p = new PVector(cos(angle), sin(angle), 0);
       p = p.cross(new PVector(0, 0, 1));
-      p.mult(strokeW);
+      p.mult(attributes.segStrokeWeight);
 
       triangleStripPoints.add(new float[] {newXY[0]+p.x, newXY[1]+p.y, 0});
       triangleStripPoints.add(new float[] {newXY[0]-p.x, newXY[1]-p.y, 0});
