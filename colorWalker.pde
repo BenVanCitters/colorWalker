@@ -4,7 +4,7 @@ StrokeCollection collection;
 
 void setup()
 {
-  img = loadImage("027_27.JPG");
+  img = loadImage("20150815_130152.jpg");
   img.loadPixels();
   int wth = 1500;
   size(1000,1000,P3D);
@@ -31,7 +31,8 @@ void mouseReleased()
   long start = millis();
   
   //add a stroke and re-render the scene
-  collection.addStroke(transformedMouse);
+  for(int i = 0; i < 5; i++)
+    collection.addStroke(transformedMouse);
   collection.drawStrokes();
   println("draw time: " + (millis()-start));
 }

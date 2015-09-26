@@ -7,7 +7,7 @@ class ColorStroke
   ArrayList<float[]> pathPoints;
   ArrayList<float[]> triangleStripPoints;
   ArrayList<SegmentDrawAttributes> pathAttributes;
-  int segmentCount = 1000;
+  int segmentCount = 500;
 
 
   public ColorStroke()
@@ -23,7 +23,7 @@ class ColorStroke
     int currentIndex = getIndexFromPos(startingPoint, g);
 
     float maxDelta = .1;
-    float deltaDelta = .02;
+    float deltaDelta = .05;
     img.loadPixels();
 
     int currentXY[] = {0, 0};
@@ -33,7 +33,7 @@ class ColorStroke
       //set some per-segment attributes
       SegmentDrawAttributes attributes = new SegmentDrawAttributes();
       attributes.strokeColor = img.pixels[currentIndex];
-      attributes.segStrokeWeight = .6+random(10);;
+      attributes.segStrokeWeight = .1+random(2);
       pathAttributes.add(attributes);
 
       float brtness = .99*brightness(attributes.strokeColor)/255.f;
@@ -43,7 +43,7 @@ class ColorStroke
       angle += angleDelta;
 
       //get a semi-random distance
-      float distance = random(40);
+      float distance = random(20);
 
       currentXY= getPosFromIndex(currentIndex, g);
 
