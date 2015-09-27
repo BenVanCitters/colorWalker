@@ -26,13 +26,12 @@ void resetCanvas()
 
 void mouseReleased()
 {
-  float transformedMouse[] = {(mouseX*collection.drawBuffer.width/width),  
-                              (mouseY*collection.drawBuffer.height/height)};
+  
   long start = millis();
   
   //add a stroke and re-render the scene
   for(int i = 0; i < 5; i++)
-    collection.addStroke(transformedMouse);
+    collection.addStroke(new float[]{mouseX,mouseY});
   collection.drawStrokes();
   println("draw time: " + (millis()-start));
 }
