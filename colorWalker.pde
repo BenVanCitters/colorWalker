@@ -52,7 +52,8 @@ void mouseReleased()
 void randomStokes()
 {
   collection.clearStrokesAndBuffer();
-  for(int i = 0; i < 30; i++)
+  int count = getMaxGenCount();
+  for(int i = 0; i < count; i++)
     collection.addStroke(new float[]{random(width),random(height)});
 }
 
@@ -64,7 +65,7 @@ void lineStokes()
   float[] pt1 = {random(width),random(height)};
   float[] pt2 = {random(width),random(height)};
   float[] v = {pt2[0]-pt1[0],pt2[1]-pt1[1]};
-  int count = 30;
+  int count = getMaxGenCount();
   for(int i = 0; i < count; i++)
   {
     float pct = i*1.0/ count;
@@ -79,7 +80,7 @@ void pointStokes()
 {
   collection.clearStrokesAndBuffer();
   float[] pt1 = {random(width),random(height)};
-  int count = 30;
+  int count = getMaxGenCount();
   for(int i = 0; i < count; i++)
   {
     collection.addStroke(pt1);
@@ -89,4 +90,9 @@ void pointStokes()
 void incrementIndex()
 {
   collection.increaseImgIndex();
+}
+
+int getMaxGenCount()
+{
+  return (int)(70*scale5.get());
 }

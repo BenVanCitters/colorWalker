@@ -69,10 +69,10 @@ class ColorStroke
   //==============================================================
   //update moves all of the verts
   //==============================================================
-  void update(PGraphics target, PImage source, float maxAmp,float samps[])
+  void update(PGraphics target, PImage source, float maxAmp,float samps[], float tm)
   {
     
-    float tm = millis()/1000.f;
+
     float currentXY[] = new float[]{startPoint[0],startPoint[1]};
     SegmentDrawAttributes attr = pathAttributes.get(0);
     angle = startAngle;

@@ -12,7 +12,7 @@ class StrokeCollection
   
   private Vector<ColorStroke> newStrokes;
   private boolean clearStrokes;
-  
+  private float tm;
   //==============================================================
   //==============================================================
   public StrokeCollection(PApplet p)
@@ -68,13 +68,14 @@ class StrokeCollection
   void updateStrokes()
   {
     long start = millis();
+   tm += .06*scale4.get();
     float maxAmp = rListen.getMaxAmp();
     float samps[] = rListen.getBackSamples();
     
     atomicallyClearAndInsertStrokes();
     for (ColorStroke cs : strokes)
     {
-      cs.update(drawBuffer, scrImage[scrImageIndex], maxAmp,samps);
+      cs.update(drawBuffer, scrImage[scrImageIndex], maxAmp,samps,tm);
     }
   }
 //==============================================================

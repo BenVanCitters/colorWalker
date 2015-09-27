@@ -118,8 +118,8 @@ void noteOff(int channel, int pad, int velocity) {
 TweenedFloat scale1 = new TweenedFloat(1,1,.1); //segment pct to draw
 TweenedFloat scale2 = new TweenedFloat(1,1,1.0); //pct total strokes to draw
 TweenedFloat scale3 = new TweenedFloat(1,1,.1); // alpha
-TweenedFloat scale4 = new TweenedFloat(10,10,.1);
-TweenedFloat scale5 = new TweenedFloat(10,10,.1);
+TweenedFloat scale4 = new TweenedFloat(1,1,.1); //speed
+TweenedFloat scale5 = new TweenedFloat(1,1,1.0); //max gen count pct
 TweenedFloat scale6 = new TweenedFloat(10,10,.1);
 TweenedFloat scale7 = new TweenedFloat(10,10,.1);
 TweenedFloat scale8 = new TweenedFloat(10,10,.1);
