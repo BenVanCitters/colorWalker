@@ -11,6 +11,9 @@ class RollingSampleListener implements AudioListener
 AudioInput in;
 
   float backSamples[];
+  
+  //==============================================================
+  //==============================================================
   public RollingSampleListener(PApplet p)
   {
     minim = new Minim(p);
@@ -18,11 +21,14 @@ AudioInput in;
     in.addListener(this);
     backSamples = new float[1028*1];
   }
-  
+  //==============================================================
+  //==============================================================
   void samples(float[] sampL, float[] sampR) 
   {  }
   
   int topIndex = 0;
+  //==============================================================
+  //==============================================================
   void samples(float[] samp) 
   {    
     for(int i = 0; i < samp.length;  i++)
@@ -32,6 +38,8 @@ AudioInput in;
     }
   }
 
+//==============================================================
+//==============================================================
   void getLastSamples(float[] emptySamples)
   {
     for(int i = 0; i < emptySamples.length && i < backSamples.length; i++)
@@ -43,12 +51,16 @@ AudioInput in;
     }
   }
   
+  //==============================================================
+  //==============================================================
   float getSample(int index)
   {
     int wrappedIndex = (topIndex+index)%backSamples.length;
     return backSamples[wrappedIndex];
   }
   
+  //==============================================================
+  //==============================================================
   float[] getBackSamples()
   {
     float retVal[] = new float[backSamples.length];
@@ -60,6 +72,8 @@ AudioInput in;
     return retVal;
   }
   
+  //==============================================================
+  //==============================================================
   public float getMaxAmp()
   {
     float curMax = 0;
@@ -69,6 +83,4 @@ AudioInput in;
     }
     return curMax;
   }
-  
-
 }

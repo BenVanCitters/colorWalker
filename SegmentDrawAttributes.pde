@@ -7,5 +7,4 @@ class SegmentDrawAttributes
   float segAngleDelta;
   float segAngleDeltaFreq;
   float segAngleDeltaMag;
-//  float segAngle;
 }

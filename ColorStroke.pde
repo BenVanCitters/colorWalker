@@ -1,3 +1,5 @@
+import java.util.Vector;
+
 class ColorStroke
 {
   
@@ -7,30 +9,34 @@ class ColorStroke
   float maxWeightDelta = 0.1;
   float maxDistDelta = 3;
   
-  ArrayList<float[]> pathPoints;
-  ArrayList<float[]> triangleStripPoints;
-  ArrayList<SegmentDrawAttributes> pathAttributes;
+  Vector<float[]> pathPoints;
+  Vector<float[]> triangleStripPoints;
+  Vector<SegmentDrawAttributes> pathAttributes;
   int segmentCount = 200;
   
-    float maxDelta = .25;
-    float deltaDelta = .01;
-float[] startPoint;
+  float maxDelta = .25;
+  float deltaDelta = .01;
+  float[] startPoint;
+  
+  //==============================================================
+  //==============================================================
   public ColorStroke()
   {
-    pathPoints = new ArrayList<float[]>();
-    triangleStripPoints = new ArrayList<float[]>();
-    pathAttributes = new ArrayList<SegmentDrawAttributes>();
+    pathPoints = new Vector<float[]>();
+    triangleStripPoints = new Vector<float[]>();
+    pathAttributes = new Vector<SegmentDrawAttributes>();
   } 
 
+  //==============================================================
   //constructs a line in img Space - expects a starting point in image space
+  //==============================================================
   void constructLine(PGraphics target, PImage source, float[] startingPoint)
   {
     startPoint = new float[]{startingPoint[0],startingPoint[1]};
 
     source.loadPixels();
 
-    float currentXY[] = new float[]{startingPoint[0],startingPoint[1]};
-    
+    //float currentXY[] = new float[]{startingPoint[0],startingPoint[1]};
 
     for (int i = 0; i < segmentCount; i++)
     {
@@ -38,55 +44,35 @@ float[] startPoint;
       SegmentDrawAttributes attributes = new SegmentDrawAttributes();
       
       attributes.strokeColor = 0;//source.pixels[getSrcIndexFromPos(currentXY, source)];
-      attributes.segStrokeWeight = 5.1+random(2);
-//
+      attributes.segStrokeWeight = 1.1+random(2);
+
       float brtness = .99*brightness(attributes.strokeColor)/255.f;
-//       
-      angleDelta += (random(deltaDelta*2)-deltaDelta);//*(1-brtness);
-//      //constrain new angle
+       
+      angleDelta += (random(deltaDelta*2)-deltaDelta);
+      //constrain new angle
       angleDelta = max(-maxDelta, min(maxDelta, angleDelta));
       attributes.segAngleDelta = angleDelta;
       attributes.segAngleDeltaFreq = random(1)-.5;
       attributes.segAngleDeltaMag = random(.5);
       angle += angleDelta;
-//      println("angleDelta " + angleDelta);
-//      attributes.segAngle = angle;
+
       
-//      //get a semi-random distance
+      //get a semi-random distance
       float distance = random(40);
       attributes.segLen = distance;
       
-//
-//      currentXY[0] +=distance*cos(angle);
-//      currentXY[1] +=distance*sin(angle);
-//
-//      //constrain index to positions on the image               
-//      currentXY[0] = max(0, min(currentXY[0], source.width));
-//      currentXY[1] = max(0, min(currentXY[1], source.height));  
-//      
-//      pathPoints.add(currentXY);
-//      //do cross product to add width to the line
-//      PVector p = new PVector(cos(angle), sin(angle), 0);
-//      p = p.cross(new PVector(0, 0, 1));
-//      p.mult(attributes.segStrokeWeight);
 
-//      float uVerts[] = {currentXY[0]+p.x, currentXY[1]+p.y, 0};
-//      float bVerts[] = {currentXY[0]-p.x, currentXY[1]-p.y, 0};
-//      
-//      triangleStripPoints.add(uVerts);
-//      triangleStripPoints.add(bVerts);
-      
       pathAttributes.add(attributes);
     }
-//    convertPointsToBufferSpace(target);
   }
   
-  
+  //==============================================================
   //update moves all of the verts
-  void update(PGraphics target, PImage source)
+  //==============================================================
+  void update(PGraphics target, PImage source, float maxAmp,float samps[])
   {
     
-  float tm = millis()/1000.f;
+    float tm = millis()/1000.f;
     float currentXY[] = new float[]{startPoint[0],startPoint[1]};
     SegmentDrawAttributes attr = pathAttributes.get(0);
     angle = startAngle;
@@ -95,6 +81,8 @@ float[] startPoint;
     triangleStripPoints.clear();
     for (int i = 0; i < segmentCount; i++)
     {
+      
+      int sampIndex = min(i,samps.length-1);
       //set some per-segment attributes
       SegmentDrawAttributes attributes = pathAttributes.get(i);//new SegmentDrawAttributes();
       attributes.strokeColor = source.pixels[getSrcIndexFromPos(currentXY, source)];
@@ -127,7 +115,7 @@ float[] startPoint;
       //do cross product to add width to the line
       PVector p = new PVector(cos(angle), sin(angle), 0);
       p = p.cross(new PVector(0, 0, 1));
-      p.mult(brtness*40+attributes.segStrokeWeight);
+      p.mult(samps[sampIndex]*200+brtness*15+attributes.segStrokeWeight);
 
       float uVerts[] = {currentXY[0]+p.x, currentXY[1]+p.y, 0};
       float bVerts[] = {currentXY[0]-p.x, currentXY[1]-p.y, 0};
@@ -135,13 +123,12 @@ float[] startPoint;
       triangleStripPoints.add(uVerts);
       triangleStripPoints.add(bVerts);
       
-//      pathAttributes.add(attributes);
     }
-//    convertPointsToBufferSpace(target, source);
   }
   
-  
-//convert points from image into buffer space
+  //==============================================================
+  //convert points from image into buffer space
+  //==============================================================
   void convertPointsToBufferSpace(PGraphics g, PImage src)
   {
     float mult[] = {g.width*1.0/src.width,g.height*1.0/src.height};
@@ -157,9 +144,11 @@ float[] startPoint;
       vert[1] *= mult[1];
     }
   }
-
+  
+  //==============================================================
   // draw a smooth line
-  void draw(PGraphics g, PImage src)
+  //==============================================================
+  void draw(PGraphics g, PImage src, float drawPct)
   {
     long start = millis();
     g.pushMatrix();
@@ -167,7 +156,9 @@ float[] startPoint;
     g.beginShape(TRIANGLE_STRIP);
 
     g.noStroke();
-    for (int i = 0; i < triangleStripPoints.size()/2; i++)
+    int drawCount = (int )(drawPct* triangleStripPoints.size()/2);
+//    println("drawCount: " + drawCount);
+    for (int i = 0; i < drawCount; i++)
     {
       int currentColor = pathAttributes.get(i).strokeColor;
       g.fill(currentColor);
@@ -182,8 +173,10 @@ float[] startPoint;
     g.popMatrix();
     
   }
-
+  
+  //==============================================================
   //draw with boxes
+  //==============================================================
   void draw2(PGraphics g, PImage src)
   {
     long start = millis();
@@ -202,13 +195,15 @@ float[] startPoint;
       
       float currentPoint[] = pathPoints.get(i);
       float nextPoint[] = pathPoints.get(i+1);
-  g.ellipse(currentPoint[0], currentPoint[1], 100,100);
+//  g.ellipse(currentPoint[0], currentPoint[1], 100,100);
       g.line(currentPoint[0], currentPoint[1],nextPoint[0],nextPoint[1]);
     }
     g.popMatrix();
     g.endDraw();
   }
 
+  //==============================================================
+  //==============================================================
   int getSrcIndexFromPos(float[] pos, PImage source)
   {
     if (source.pixels == null)
@@ -222,7 +217,9 @@ float[] startPoint;
 //    result = max(0, min(result, img.pixels.length-1));
     return result;
   }
-
+  
+//  //==============================================================
+//  //==============================================================
 //  int[] getPosFromIndex(int index, PImage g)
 //  {
 //    int result[] = new int[] { index%g.width, index/g.width };
