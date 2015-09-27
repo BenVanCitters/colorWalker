@@ -1,11 +1,19 @@
 class StrokeCollection
 {
+  
+  RollingSampleListener rSlisten; 
+
   PImage scrImage;
   PGraphics drawBuffer;
   private ArrayList<ColorStroke> strokes;
   
-  public StrokeCollection(PImage img)
+  public StrokeCollection(PApplet p)
   {
+    rSlisten = new RollingSampleListener(p);
+    
+    PImage img;
+    img = loadImage("moth-1.jpg");
+    img.loadPixels();
     strokes = new ArrayList<ColorStroke>();
     scrImage = img;
     drawBuffer = createGraphics(min(width,img.width),min(height,img.height),P3D);
@@ -22,28 +30,44 @@ class StrokeCollection
   
   void addStroke(float[] pos)
   {
-    println("pos: " + pos[0] + ", " + pos[1] );
-    println("scr wxh: " + width + ", " + height );
+
     float transformedMouse[] = {scrImage.width*pos[0]/width,  
                                 scrImage.height*pos[1]/height};
-    println("transformedMouse: " + transformedMouse[0] + ", " + transformedMouse[1] ) ; 
-    println("img wxh: " + scrImage.width + ", " + scrImage.height );    
+   
     ColorStroke cs = new ColorStroke();
-    cs.constructLine(drawBuffer, scrImage, transformedMouse);
+      cs.constructLine(drawBuffer, scrImage, transformedMouse);
+ 
     strokes.add(cs);
-    cs.draw(drawBuffer);
+//    cs.draw(drawBuffer,scrImage);
+  }
+  
+  void updateStrokes()
+  {
+    long start = millis();
+    for(ColorStroke cs : strokes)
+    {
+      cs.update(drawBuffer, scrImage);
+    }
   }
   
   void drawStrokes()
   {
-//    drawBuffer.beginDraw();
-//    drawBuffer.clear();
-//    drawBuffer.endDraw();
+    long start = millis();
+
+    scrImage.loadPixels();
+    updateStrokes();
     
+    drawBuffer.beginDraw();
+    //clear old buffer
+    drawBuffer.clear();
+    
+    //draw strokes
     for(ColorStroke cs : strokes)
     {
-//      cs.draw(drawBuffer);
+      cs.draw(drawBuffer, scrImage);
     }
+    drawBuffer.endDraw();
+//    println("draw time: " + (millis()-start));
   }
   
 }

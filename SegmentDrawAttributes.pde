@@ -5,5 +5,7 @@ class SegmentDrawAttributes
   float segStrokeWeight;
   float segLen;
   float segAngleDelta;
-  float segAngle;
+  float segAngleDeltaFreq;
+  float segAngleDeltaMag;
+//  float segAngle;
 }
