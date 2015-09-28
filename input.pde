@@ -120,8 +120,8 @@ TweenedFloat scale2 = new TweenedFloat(1,1,1.0); //pct total strokes to draw
 TweenedFloat scale3 = new TweenedFloat(1,1,.1); // alpha
 TweenedFloat scale4 = new TweenedFloat(1,1,.1); //speed
 TweenedFloat scale5 = new TweenedFloat(1,1,1.0); //max gen count pct
-TweenedFloat scale6 = new TweenedFloat(10,10,.1);
-TweenedFloat scale7 = new TweenedFloat(10,10,.1);
+TweenedFloat scale6 = new TweenedFloat(1,1,.1); //length
+TweenedFloat scale7 = new TweenedFloat(1,1,.1); //stroke weight pct
 TweenedFloat scale8 = new TweenedFloat(10,10,.1);
 
 //==============================================================
@@ -155,7 +155,7 @@ void controllerChange(int channel, int number, int value) {
       scale6.targetValue = (value)/128.f;
       break;  
     case LPD8_K7: // = K6
-      scale7.targetValue = (int)((value*1.1f)/128.f);
+      scale7.targetValue = ((value)/128.f);
       break;  
     case LPD8_K8: // = K6
       scale8.targetValue = (int)((value*10.f)/128.f);

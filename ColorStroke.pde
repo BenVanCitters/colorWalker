@@ -69,7 +69,7 @@ class ColorStroke
   //==============================================================
   //update moves all of the verts
   //==============================================================
-  void update(PGraphics target, PImage source, float maxAmp,float samps[], float tm)
+  void update(PGraphics target, PImage source, float maxAmp,float samps[], float tm, float sz,float strokeW)
   {
     
 
@@ -103,7 +103,7 @@ class ColorStroke
       //get a semi-random distance
       float distance = attributes.segLen;//max(0,attributes.segLen + (random(maxDistDelta*2)-maxDistDelta));
       attributes.segLen = distance;
-
+distance *= sz;
       currentXY[0] +=distance*cos(angle);
       currentXY[1] +=distance*sin(angle);
 
@@ -115,7 +115,7 @@ class ColorStroke
       //do cross product to add width to the line
       PVector p = new PVector(cos(angle), sin(angle), 0);
       p = p.cross(new PVector(0, 0, 1));
-      p.mult(samps[sampIndex]*200+brtness*15+attributes.segStrokeWeight);
+      p.mult(strokeW*(samps[sampIndex]*200+brtness*15+attributes.segStrokeWeight));
 
       float uVerts[] = {currentXY[0]+p.x, currentXY[1]+p.y, 0};
       float bVerts[] = {currentXY[0]-p.x, currentXY[1]-p.y, 0};

@@ -68,14 +68,16 @@ class StrokeCollection
   void updateStrokes()
   {
     long start = millis();
-   tm += .06*scale4.get();
+    tm += .06*scale4.get();
+    float sz = scale6.get();
+    float strokeW = scale7.get();
     float maxAmp = rListen.getMaxAmp();
     float samps[] = rListen.getBackSamples();
     
     atomicallyClearAndInsertStrokes();
     for (ColorStroke cs : strokes)
     {
-      cs.update(drawBuffer, scrImage[scrImageIndex], maxAmp,samps,tm);
+      cs.update(drawBuffer, scrImage[scrImageIndex], maxAmp,samps,tm,sz,strokeW);
     }
   }
 //==============================================================

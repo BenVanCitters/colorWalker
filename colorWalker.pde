@@ -94,5 +94,5 @@ void incrementIndex()
 
 int getMaxGenCount()
 {
-  return (int)(70*scale5.get());
+  return (int)(120*scale5.get());
 }
