@@ -19,18 +19,17 @@ class StrokeCollection
   {
     rListen = new RollingSampleListener(p);
 
-    scrImage = new PImage[10];
+    scrImage = new PImage[8];
     
-   scrImage[7] = loadImage("moth-0.jpg");
-   scrImage[0] = loadImage("moth-1.jpg");
-   scrImage[1] = loadImage("moth-2.jpg");
-   scrImage[2] = loadImage("moth-3.jpg");
-   scrImage[3] = loadImage("moth-4.jpg");
-   scrImage[4] = loadImage("moth-5.jpg");
-   scrImage[5] = loadImage("moth-6.jpg");
-   scrImage[6] = loadImage("moth-7.jpg");
-   scrImage[8] = loadImage("moth-3.jpg");
-   scrImage[9] = loadImage("moth-3.jpg");
+   scrImage[0] = loadImage("moth-0.jpg");
+   scrImage[1] = loadImage("moth-1.jpg");
+   scrImage[2] = loadImage("moth-2.jpg");
+   scrImage[3] = loadImage("moth-3.jpg");
+   scrImage[4] = loadImage("moth-4.jpg");
+   scrImage[5] = loadImage("moth-5.jpg");
+   scrImage[6] = loadImage("moth-6.jpg");
+   scrImage[7] = loadImage("moth-7.jpg");
+
     scrImage[scrImageIndex].loadPixels();
     strokes = new Vector<ColorStroke>();
     newStrokes = new Vector<ColorStroke>();
